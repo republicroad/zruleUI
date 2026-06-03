@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { createListData } from '@/api/serverApi'
+import { listDataService } from '../service/list-data'
 
 const formSchema = z
   .object({
@@ -100,14 +100,7 @@ export function DetailListCreateDialog({
 
   const addMutation = useMutation({
     mutationFn: async (values: detailListForm) => {
-      return await createListData(
-        values.list_id,
-        values.list_name,
-        values.user_id,
-        values.value,
-        values.tag,
-        values.ttl
-      )
+      return await listDataService.createListData(values)
     },
     onSuccess: async (_, values) => {
       toast.promise(sleep(0.01), {

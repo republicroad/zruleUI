@@ -4,7 +4,6 @@ import { sleep } from '@/lib/utils'
 import { useForm } from 'react-hook-form'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -26,7 +25,7 @@ import { Input } from '@/components/ui/input'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { counter_times, counter_types } from '../data/data'
 import { type shareCounter } from '../data/schema'
-import { createCounter } from "../../../api/serverApi"
+import { counterService } from '../service/counter'
 
 const formSchema = z
   .object({
@@ -62,7 +61,7 @@ export function CountersActionDialog({
 
   const addMutation = useMutation({
     mutationFn: async (values: CounterForm) => {
-      const res = await createCounter(values.user_id,values.counter_name,values.counter_type,values.counter_time)
+      const res = await counterService.createCounter(values)
       return await res
     },
     // onSettled: () => queryClient.invalidateQueries({ queryKey: ['/counter'] }),

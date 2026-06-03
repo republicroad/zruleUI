@@ -9,9 +9,8 @@ import { CounterDialogs } from './components/counter-dialogs'
 import { CounterPrimaryButtons } from './components/counter-primary-button'
 import { CounterProvider } from './components/counter-provider'
 import { useQuery } from '@tanstack/react-query'
-import { shareCounterListSchema } from './data/schema'
-import { counter_list,counters } from './data/counter'
-import { fetchCounterList } from "../../api/serverApi"
+import { counters } from './data/counter'
+import { counterService } from './service/counter'
 import { CounterTable } from './components/counter-table'
 
 const route = getRouteApi('/_authenticated/counter/')
@@ -36,7 +35,7 @@ export function Counter() {
   const { data } = useQuery({
     queryKey: ['/counter'],
     queryFn: async () => {
-      const response = await fetchCounterList();
+       const response = await counterService.fetchCounterList()
       return response
     },
   });

@@ -26,7 +26,6 @@ import {
   Voicemail,
   EyeOff,
   ListOrdered,
-  FolderGit2,
   List,
   ListTree,
   TimerReset,

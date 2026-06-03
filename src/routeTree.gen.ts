@@ -288,9 +288,9 @@ export interface FileRoutesByFullPath {
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/formList/detail': typeof AuthenticatedFormListDetailRoute
   '/formList/list': typeof AuthenticatedFormListListRoute
-  '/rules/test': typeof AuthenticatedRulesTestRoute
   '/lexicon/detail': typeof AuthenticatedLexiconDetailRoute
   '/lexicon/list': typeof AuthenticatedLexiconListRoute
+  '/rules/test': typeof AuthenticatedRulesTestRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -327,9 +327,9 @@ export interface FileRoutesByTo {
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/formList/detail': typeof AuthenticatedFormListDetailRoute
   '/formList/list': typeof AuthenticatedFormListListRoute
-  '/rules/test': typeof AuthenticatedRulesTestRoute
   '/lexicon/detail': typeof AuthenticatedLexiconDetailRoute
   '/lexicon/list': typeof AuthenticatedLexiconListRoute
+  '/rules/test': typeof AuthenticatedRulesTestRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -370,9 +370,9 @@ export interface FileRoutesById {
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/formList/detail': typeof AuthenticatedFormListDetailRoute
   '/_authenticated/formList/list': typeof AuthenticatedFormListListRoute
-  '/_authenticated/rules/test': typeof AuthenticatedRulesTestRoute
   '/_authenticated/lexicon/detail': typeof AuthenticatedLexiconDetailRoute
   '/_authenticated/lexicon/list': typeof AuthenticatedLexiconListRoute
+  '/_authenticated/rules/test': typeof AuthenticatedRulesTestRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -413,9 +413,9 @@ export interface FileRouteTypes {
     | '/errors/$error'
     | '/formList/detail'
     | '/formList/list'
-    | '/rules/test'
     | '/lexicon/detail'
     | '/lexicon/list'
+    | '/rules/test'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -452,9 +452,9 @@ export interface FileRouteTypes {
     | '/errors/$error'
     | '/formList/detail'
     | '/formList/list'
-    | '/rules/test'
     | '/lexicon/detail'
     | '/lexicon/list'
+    | '/rules/test'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -494,9 +494,9 @@ export interface FileRouteTypes {
     | '/_authenticated/errors/$error'
     | '/_authenticated/formList/detail'
     | '/_authenticated/formList/list'
-    | '/_authenticated/rules/test'
     | '/_authenticated/lexicon/detail'
     | '/_authenticated/lexicon/list'
+    | '/_authenticated/rules/test'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
@@ -763,6 +763,7 @@ declare module '@tanstack/react-router' {
       fullPath: '/rules/test'
       preLoaderRoute: typeof AuthenticatedRulesTestRouteImport
       parentRoute: typeof AuthenticatedRulesRouteRoute
+    }
     '/_authenticated/lexicon/list': {
       id: '/_authenticated/lexicon/list'
       path: '/lexicon/list'

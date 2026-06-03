@@ -35,7 +35,7 @@ import {
   FileUploadList,
   FileUploadTrigger,
 } from '@/components/ui/file-upload'
-import { uploadFormList } from '@/api/serverApi'
+import { formListService } from '../service/list'
 import type { _List } from '../data/schema'
 
 const formSchema = z.object({
@@ -93,12 +93,17 @@ export function ListImportDialog({
 
   const importMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) =>{
-      const filedata: any = new FormData();
+      const filedata = new FormData()
       files.forEach((file) => {
-        filedata.append('file', file as Blob);
-      });
+        filedata.append('file', file)
+      })
 
-     const res =  await uploadFormList(values.list_id, values.list_name, values.user_id, filedata)
+    const res =  await formListService.uploadFormList({
+       list_id: values.list_id,
+       list_name: values.list_name,
+       user_id: values.user_id,
+       data: filedata,
+     })
      return await res
     }
   })
