@@ -4,7 +4,6 @@ import { sleep } from '@/lib/utils'
 import { useForm } from 'react-hook-form'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -23,8 +22,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { _List } from '../data/schema'
-import { createFormList } from "@/api/serverApi"
+import { formListService } from '../service/list'
 
 
 const formSchema = z
@@ -53,7 +51,7 @@ export function ListCreateDialog({
   })
   const addMutation = useMutation({
     mutationFn: async (values: ListForm) => {
-      const res = await createFormList(values.user_id, values.list_name)
+      const res = await formListService.createFormList(values)
       return await res
     },
   })

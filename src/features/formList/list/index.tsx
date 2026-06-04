@@ -12,7 +12,7 @@ import { ListProvider } from './components/list-provider'
 import { ListTable } from './components/list-table'
 import { ListDialogs } from './components/list-dialog'
 import { list_data }  from './data/data'
-import { fetchFormList } from "@/api/serverApi"
+import { formListService } from './service/list'
 
 const defaultListMetaOptions: FormListOption[] = list_data.map((item) => ({
   list_id: item.list_id,
@@ -29,7 +29,7 @@ export default function List() {
   const { data } = useQuery({
     queryKey: ['/formList/list'],
     queryFn: async () => {
-      const response = await fetchFormList();
+      const response = await formListService.fetchFormList()
       const nextListOptions = Array.isArray(response?.data)
         ? response.data.map((item) => ({
             list_id: item.list_id,
