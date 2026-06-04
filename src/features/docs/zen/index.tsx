@@ -1,11 +1,10 @@
 import { type MouseEvent, useEffect, useMemo, useState } from 'react'
-import { BookOpen, FileText, ListTree } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { Logo } from '@/assets/logo'
 import {
   createMarkdownComponents,
   extractTableOfContents,
+  markdownRehypePlugins,
 } from '@/features/docs/shared/markdown-doc'
 import { cn } from '@/lib/utils'
 
@@ -140,47 +139,7 @@ export function ZenExpressionDocs({
         </div>
       ) : content ? (
         <div className='grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)] xl:gap-10'>
-          <aside className='space-y-4 lg:sticky lg:top-20 lg:self-start'>
-            <div className='rounded-3xl border bg-card/95 p-5 shadow-xs backdrop-blur supports-[backdrop-filter]:bg-card/80'>
-              <div className='mb-4 flex items-center gap-3'>
-                <div className='flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary'>
-                  <Logo className='size-5' />
-                </div>
-                <div>
-                  <p className='text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase'>
-                    Zen Engine
-                  </p>
-                  <h1 className='text-lg font-semibold tracking-tight'>Expression Language</h1>
-                </div>
-              </div>
-              <p className='text-sm leading-6 text-muted-foreground'>
-                业务表达式语言说明，包含语法、数据类型、函数以及常见规则示例。
-              </p>
-              <div className='mt-5 grid grid-cols-3 gap-2'>
-                <div className='rounded-2xl bg-muted/60 p-3'>
-                  <div className='mb-2 text-primary'>
-                    <ListTree className='size-4' />
-                  </div>
-                  <p className='text-lg font-semibold'>{toc.length}</p>
-                  <p className='text-xs text-muted-foreground'>章节</p>
-                </div>
-                <div className='rounded-2xl bg-muted/60 p-3'>
-                  <div className='mb-2 text-primary'>
-                    <BookOpen className='size-4' />
-                  </div>
-                  <p className='text-lg font-semibold'>MD</p>
-                  <p className='text-xs text-muted-foreground'>文档</p>
-                </div>
-                <div className='rounded-2xl bg-muted/60 p-3'>
-                  <div className='mb-2 text-primary'>
-                    <FileText className='size-4' />
-                  </div>
-                  <p className='text-lg font-semibold'>ZEN</p>
-                  <p className='text-xs text-muted-foreground'>语法</p>
-                </div>
-              </div>
-            </div>
-
+          <aside className='lg:sticky lg:top-20 lg:self-start'>
             <div className='hidden max-h-[calc(100vh-22rem)] overflow-y-auto rounded-3xl border bg-card/95 p-4 shadow-xs backdrop-blur supports-[backdrop-filter]:bg-card/80 lg:block'>
               <p className='mb-3 text-sm font-semibold tracking-tight'>目录</p>
               <nav aria-label='ZEN 文档目录'>
@@ -230,20 +189,12 @@ export function ZenExpressionDocs({
             </section>
 
             <article className='overflow-hidden rounded-[2rem] border bg-card/95 shadow-xs backdrop-blur supports-[backdrop-filter]:bg-card/80'>
-              <div className='border-b bg-[linear-gradient(135deg,rgba(34,197,94,0.08),rgba(255,255,255,0)_55%)] px-6 py-6 sm:px-8'>
-                <p className='mb-2 text-xs font-medium tracking-[0.2em] text-muted-foreground uppercase'>
-                  Documentation
-                </p>
-                <h2 className='text-3xl font-semibold tracking-tight sm:text-4xl'>
-                  Expression Language
-                </h2>
-                <p className='mt-3 max-w-3xl text-sm leading-6 text-muted-foreground sm:text-base'>
-                  该页面聚焦 ZEN Expression 的规则编写方式，按语法层次组织目录，适合查阅函数、运算符和各数据类型能力。
-                </p>
-              </div>
-
               <div className='px-6 py-8 sm:px-8 lg:px-10'>
-                <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown
+                  components={markdownComponents}
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={markdownRehypePlugins}
+                >
                   {content}
                 </ReactMarkdown>
               </div>

@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm'
 import {
   createMarkdownComponents,
   extractTableOfContents,
+  markdownRehypePlugins,
 } from '@/features/docs/shared/markdown-doc'
 import { cn } from '@/lib/utils'
 
@@ -91,7 +92,11 @@ export function JsonDecisionModelDocs({
             </div>
           </aside>
           <div className='min-w-0'>
-            <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown
+              components={markdownComponents}
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={markdownRehypePlugins}
+            >
               {content}
             </ReactMarkdown>
           </div>
