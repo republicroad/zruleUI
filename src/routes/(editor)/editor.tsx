@@ -4,6 +4,7 @@ import {
   JdmConfigProvider,
   CodeEditor,
   DecisionGraph,
+  DecisionGraphType,
 } from '@gorules/jdm-editor'
 import '@gorules/jdm-editor/dist/style.css'
 import classes from './decision-simple.module.css'
@@ -38,7 +39,10 @@ function ExpressionEditor() {
 }
 
 function RuleEditor() {
-  const [value, setValue] = useState({ nodes: [], edges: [] })
+  const [value, setValue] = useState<DecisionGraphType>({
+    nodes: [],
+    edges: [],
+  })
 
   return (
     <div className={classes.page}>

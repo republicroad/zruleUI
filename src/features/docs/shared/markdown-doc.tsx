@@ -1,8 +1,12 @@
-import { type ComponentPropsWithoutRef, isValidElement, type ReactNode } from 'react'
+import {
+  type ComponentPropsWithoutRef,
+  isValidElement,
+  type ReactNode,
+} from 'react'
 import GithubSlugger from 'github-slugger'
 import { Link2 } from 'lucide-react'
-import rehypeSlug from 'rehype-slug'
 import { type Components } from 'react-markdown'
+import rehypeSlug from 'rehype-slug'
 import { cn } from '@/lib/utils'
 
 export type TocItem = {
@@ -42,7 +46,8 @@ function collectNodeText(children: ReactNode): string {
   }
 
   if (isValidElement(children)) {
-    return collectNodeText(children.props.children)
+    const props = children.props as { children?: React.ReactNode }
+    return collectNodeText(props.children)
   }
 
   return ''
@@ -150,17 +155,21 @@ export function createMarkdownComponents(): Components {
       const headingId = resolveHeadingId(id, children)
 
       return (
-        <Tag id={headingId} className={cn('group/heading relative', className, headingClassName)} {...props}>
+        <Tag
+          id={headingId}
+          className={cn('group/heading relative', className, headingClassName)}
+          {...props}
+        >
           <a
             href={`#${headingId}`}
-            className='absolute inset-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50'
+            className='absolute inset-0 rounded-lg focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:outline-none'
             aria-label={`跳转到标题：${stripMarkdownInline(collectNodeText(children))}`}
           />
           <span className='relative z-10 inline-flex items-start gap-2'>
             <span>{children}</span>
             <span
               className={cn(
-                'mt-1 inline-flex shrink-0 text-muted-foreground/70 opacity-0 transition-opacity group-hover/heading:opacity-100 group-focus-within/heading:opacity-100',
+                'mt-1 inline-flex shrink-0 text-muted-foreground/70 opacity-0 transition-opacity group-focus-within/heading:opacity-100 group-hover/heading:opacity-100',
                 iconClassName
               )}
               aria-hidden='true'
@@ -188,9 +197,16 @@ export function createMarkdownComponents(): Components {
       'mt-8 mb-3 scroll-m-20 text-xl font-semibold tracking-tight',
       'text-primary/80'
     ),
-    h4: createHeading('h4', 'mt-6 mb-2 scroll-m-20 text-lg font-semibold', 'text-primary/70'),
+    h4: createHeading(
+      'h4',
+      'mt-6 mb-2 scroll-m-20 text-lg font-semibold',
+      'text-primary/70'
+    ),
     p: ({ className, ...props }) => (
-      <p className={cn('my-4 leading-7 text-foreground/90', className)} {...props} />
+      <p
+        className={cn('my-4 leading-7 text-foreground/90', className)}
+        {...props}
+      />
     ),
     a: ({ className, ...props }) => (
       <a
@@ -202,21 +218,33 @@ export function createMarkdownComponents(): Components {
       />
     ),
     ul: ({ className, ...props }) => (
-      <ul className={cn('my-4 ml-6 list-disc space-y-2 marker:text-primary', className)} {...props} />
+      <ul
+        className={cn(
+          'my-4 ml-6 list-disc space-y-2 marker:text-primary',
+          className
+        )}
+        {...props}
+      />
     ),
     ol: ({ className, ...props }) => (
       <ol
-        className={cn('my-4 ml-6 list-decimal space-y-2 marker:text-primary', className)}
+        className={cn(
+          'my-4 ml-6 list-decimal space-y-2 marker:text-primary',
+          className
+        )}
         {...props}
       />
     ),
     li: ({ className, ...props }) => (
-      <li className={cn('leading-7 text-foreground/90', className)} {...props} />
+      <li
+        className={cn('leading-7 text-foreground/90', className)}
+        {...props}
+      />
     ),
     blockquote: ({ className, ...props }) => (
       <blockquote
         className={cn(
-          'my-6 border-l-4 border-primary/30 bg-muted/40 py-1 pl-4 italic text-muted-foreground',
+          'my-6 border-l-4 border-primary/30 bg-muted/40 py-1 pl-4 text-muted-foreground italic',
           className
         )}
         {...props}
@@ -224,7 +252,10 @@ export function createMarkdownComponents(): Components {
     ),
     table: ({ className, ...props }) => (
       <div className='my-6 overflow-x-auto rounded-lg border'>
-        <table className={cn('w-full border-collapse text-sm', className)} {...props} />
+        <table
+          className={cn('w-full border-collapse text-sm', className)}
+          {...props}
+        />
       </div>
     ),
     thead: ({ className, ...props }) => (
@@ -232,12 +263,18 @@ export function createMarkdownComponents(): Components {
     ),
     th: ({ className, ...props }) => (
       <th
-        className={cn('border-b px-4 py-3 font-semibold whitespace-nowrap', className)}
+        className={cn(
+          'border-b px-4 py-3 font-semibold whitespace-nowrap',
+          className
+        )}
         {...props}
       />
     ),
     td: ({ className, ...props }) => (
-      <td className={cn('border-b px-4 py-3 align-top', className)} {...props} />
+      <td
+        className={cn('border-b px-4 py-3 align-top', className)}
+        {...props}
+      />
     ),
     pre: ({ className, ...props }) => (
       <pre
@@ -252,7 +289,9 @@ export function createMarkdownComponents(): Components {
       <code
         className={cn(
           'rounded bg-muted px-1.5 py-0.5 font-mono text-[0.9em]',
-          className?.includes('language-') ? 'bg-transparent px-0 py-0 text-inherit' : undefined,
+          className?.includes('language-')
+            ? 'bg-transparent px-0 py-0 text-inherit'
+            : undefined,
           className
         )}
         {...props}
@@ -260,7 +299,10 @@ export function createMarkdownComponents(): Components {
     ),
     img: ({ className, src, alt, ...props }) => (
       <img
-        className={cn('my-6 w-full rounded-xl border bg-card object-contain shadow-xs', className)}
+        className={cn(
+          'my-6 w-full rounded-xl border bg-card object-contain shadow-xs',
+          className
+        )}
         src={normalizeMarkdownImageSrc(src)}
         alt={alt ?? ''}
         loading='lazy'
@@ -271,7 +313,10 @@ export function createMarkdownComponents(): Components {
       <hr className={cn('my-8 border-border', className)} {...props} />
     ),
     strong: ({ className, ...props }) => (
-      <strong className={cn('font-semibold text-foreground', className)} {...props} />
+      <strong
+        className={cn('font-semibold text-foreground', className)}
+        {...props}
+      />
     ),
   }
 }

@@ -1,10 +1,10 @@
+import { useEffect } from 'react'
 import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { sleep } from '@/lib/utils'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { useQueryClient, useMutation } from '@tanstack/react-query'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -25,24 +25,20 @@ import {
 import { Input } from '@/components/ui/input'
 import { listDataService } from '../service/list-data'
 
-const formSchema = z
-  .object({
-    list_id: z.string().min(1, 'list_id is required.'),
-    list_name: z.string(),
-    user_id: z.string().min(1, 'user_id is required.'),
-    value: z.string().min(1, 'value is required.'),
-    tag: z.string(),
-    ttl: z.preprocess(
-      (value) => {
-        if (value === '' || value === null || typeof value === 'undefined') {
-          return undefined
-        }
+const formSchema = z.object({
+  list_id: z.string().min(1, 'list_id is required.'),
+  list_name: z.string(),
+  user_id: z.string().min(1, 'user_id is required.'),
+  value: z.string().min(1, 'value is required.'),
+  tag: z.string(),
+  ttl: z.preprocess((value) => {
+    if (value === '' || value === null || typeof value === 'undefined') {
+      return undefined
+    }
 
-        return Number(value)
-      },
-      z.number().min(0, 'ttl must be greater than or equal to 0').optional()
-    ),
-  })
+    return Number(value)
+  }, z.number().min(0, 'ttl must be greater than or equal to 0').optional()),
+})
 type detailListForm = z.infer<typeof formSchema>
 
 type DetailListInitForm = {
@@ -62,11 +58,11 @@ type DetailListCreateDialogProps = {
 export function DetailListCreateDialog({
   open,
   onOpenChange,
-  initform
+  initform,
 }: DetailListCreateDialogProps) {
   const queryClient = useQueryClient()
   const form = useForm<detailListForm>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       list_id: initform.list_id || '',
       list_name: initform.list_name || '',
@@ -157,115 +153,117 @@ export function DetailListCreateDialog({
             Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-          <Form {...form}>
-            <form
-              id='detail-add-form'
-              onSubmit={form.handleSubmit(onSubmit)}
-              className='space-y-4 px-0.5'
-            >
-              <FormField 
-                control={form.control}
-                name='list_id'
-                render={({ field }) => (
-                  <FormItem
-                    className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'
-                    hidden
-                  >
-                    <FormLabel className='col-span-2 text-end'>list_id</FormLabel>
-                    <FormControl>
-                      <Input disabled className='col-span-4' {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='user_id'
-                render={({ field }) => (
-                  <FormItem
-                    className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'
-                    hidden
-                  >
-                    <FormLabel className='col-span-2 text-end'>user_id</FormLabel>
-                    <FormControl>
-                      <Input disabled className='col-span-4' {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='list_name'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>名单名称:</FormLabel>
-                    <FormControl>
-                      <Input disabled className='col-span-4' {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='value'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>名单数据: </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='请输入名单数据'
-                        className='col-span-4'
-                        {...field}
-                        required
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='tag'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                    备注:
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type='text'
-                        placeholder='请输入备注'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='ttl'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
+        <Form {...form}>
+          <form
+            id='detail-add-form'
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='space-y-4 px-0.5'
+          >
+            <FormField
+              control={form.control}
+              name='list_id'
+              render={({ field }) => (
+                <FormItem
+                  className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'
+                  hidden
+                >
+                  <FormLabel className='col-span-2 text-end'>list_id</FormLabel>
+                  <FormControl>
+                    <Input disabled className='col-span-4' {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='user_id'
+              render={({ field }) => (
+                <FormItem
+                  className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'
+                  hidden
+                >
+                  <FormLabel className='col-span-2 text-end'>user_id</FormLabel>
+                  <FormControl>
+                    <Input disabled className='col-span-4' {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='list_name'
+              render={({ field }) => (
+                <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                  <FormLabel className='col-span-2 text-end'>
+                    名单名称:
+                  </FormLabel>
+                  <FormControl>
+                    <Input disabled className='col-span-4' {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='value'
+              render={({ field }) => (
+                <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                  <FormLabel className='col-span-2 text-end'>
+                    名单数据:{' '}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='请输入名单数据'
+                      className='col-span-4'
+                      {...field}
+                      required
+                    />
+                  </FormControl>
+                  <FormMessage className='col-span-4 col-start-3' />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='tag'
+              render={({ field }) => (
+                <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                  <FormLabel className='col-span-2 text-end'>备注:</FormLabel>
+                  <FormControl>
+                    <Input
+                      type='text'
+                      placeholder='请输入备注'
+                      className='col-span-4'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className='col-span-4 col-start-3' />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='ttl'
+              render={({ field }) => (
+                <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                  <FormLabel className='col-span-2 text-end'>
                     过期时间(秒):
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type='number'
-                        placeholder='请输入过期时间'
-                        className='col-span-4'
-                        {...field}
-                        value={field.value ?? ''}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-            </form>
-          </Form>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='number'
+                      placeholder='请输入过期时间'
+                      className='col-span-4'
+                      {...field}
+                      value={field.value ?? ''}
+                    />
+                  </FormControl>
+                  <FormMessage className='col-span-4 col-start-3' />
+                </FormItem>
+              )}
+            />
+          </form>
+        </Form>
         <DialogFooter>
           <Button
             type='submit'

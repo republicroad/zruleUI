@@ -128,7 +128,7 @@ export const ForgotPasswordOTP = () => {
       } else {
         toast.error(result.message || 'Failed to reset password.')
       }
-    } catch (err) {
+    } catch (err: any) {
       // Access custom error message from server response
       toast.error(err.response?.data?.message || 'Failed to reset password.')
     }
@@ -155,7 +155,7 @@ export const ForgotPasswordOTP = () => {
           return
           // throw new Error(result.data.message || 'Failed to send OTP.')
         }
-      } catch (err) {
+      } catch (err: any) {
         // Access custom error message from server response
         toast.error(err.response?.data?.message || 'Failed to send OTP.')
         throw err

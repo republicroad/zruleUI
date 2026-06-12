@@ -1,23 +1,31 @@
 import { useQuery } from '@tanstack/react-query'
 import { useLocation } from '@tanstack/react-router'
+import { useFormListStore } from '@/stores/form-list-store'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { useFormListStore } from '@/stores/form-list-store'
+import type { _List } from '../list/data/schema'
+import { DetailListDialogs } from './components/detail-dialog'
 import { DetailListPrimaryButtons } from './components/detail-primary-buttons'
 import { DetailListProvider } from './components/detail-provider'
 import { DetailListTable } from './components/detail-table'
-import { DetailListDialogs } from './components/detail-dialog'
-import { detail_data }  from './data/data'
-import type { _List } from '../list/data/schema'
+import { detail_data } from './data/data'
 import { listDataService } from './service/list-data'
 
 export default function DetailList() {
   const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
+  const queryParams = (() => {
+    const s = location.search
+    if (typeof s === 'string') return new URLSearchParams(s)
+    if (s == null) return new URLSearchParams()
+    const entries = Object.entries(s as Record<string, unknown>).map(
+      ([k, v]) => [k, String(v)]
+    )
+    return new URLSearchParams(entries as [string, string][])
+  })()
   const listOptions = useFormListStore((state) => state.listOptions)
   const list_id = queryParams.get('list_id') || listOptions[0]?.list_id || ''
 
@@ -53,10 +61,10 @@ export default function DetailList() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>名单详情: {list_meta?.list_name}</h2>
-            <p className='text-muted-foreground'>
-             Manage  your formlist here!
-            </p>
+            <h2 className='text-2xl font-bold tracking-tight'>
+              名单详情: {list_meta?.list_name}
+            </h2>
+            <p className='text-muted-foreground'>Manage your formlist here!</p>
           </div>
           <DetailListPrimaryButtons />
         </div>

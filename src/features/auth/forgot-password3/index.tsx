@@ -111,7 +111,6 @@ export function ForgotPasswordMultiStepForm() {
             value={index + 1}
             className='flex items-center justify-center'
           >
-            {console.log('render step:', step)}
             {/* {step.title} content */}
             {/* 使用组件 JSX, 这样可以在组件内部使用 useState, useEffect, useContext 等 React 功能, 使每个步骤的内容更加独立和灵活. */}
             {/* {step.content} */}

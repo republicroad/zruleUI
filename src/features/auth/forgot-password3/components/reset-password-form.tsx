@@ -57,7 +57,7 @@ export function ForgotPasswordResetPasswordForm({
     mutationFn: async (credentials: Record<string, unknown>) => {
       console.log(credentials)
     },
-    onSuccess: async (response) => {
+    onSuccess: async (response: any) => {
       console.log('mutationFn onSuccess:', response)
       // data 以后可以考虑用 typescript 类型来定义.
       await login(response.data.data.accessToken) // 直接调用 login 方法来设置 user 和 accessToken, 以及 expiresAt.
@@ -74,7 +74,7 @@ export function ForgotPasswordResetPasswordForm({
       loading: 'Signing in...',
       success: () => {
         setIsLoading(false)
-        return `Welcome back, ${data.email}!`
+        return `Welcome back!`
       },
       error: (err) => {
         setIsLoading(false)
