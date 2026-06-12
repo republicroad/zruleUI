@@ -13,7 +13,7 @@ import { DetailListTable } from './components/detail-table'
 import { DetailListDialogs } from './components/detail-dialog'
 import { detail_data }  from './data/data'
 import type { _List } from '../list/data/schema'
-import { fetchListData, fetchFormListDetail } from '@/api/serverApi'
+import { listDataService } from './service/list-data'
 
 export default function DetailList() {
   const location = useLocation()
@@ -25,7 +25,7 @@ export default function DetailList() {
     queryKey: ['/formList/detail/meta', list_id],
     enabled: Boolean(list_id),
     queryFn: async () => {
-      const response = await fetchFormListDetail(list_id)
+      const response = await listDataService.fetchFormListDetail({ list_id })
       return response
     },
   })
@@ -34,7 +34,7 @@ export default function DetailList() {
     queryKey: ['/formList/detail', list_id],
     enabled: Boolean(list_id),
     queryFn: async () => {
-      const response = await fetchListData(list_id)
+      const response = await listDataService.fetchListData({ list_id })
       return response
     },
   })

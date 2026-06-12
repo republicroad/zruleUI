@@ -1,4 +1,7 @@
-import { isValidElement, type ReactNode } from 'react'
+import { type ComponentPropsWithoutRef, isValidElement, type ReactNode } from 'react'
+import GithubSlugger from 'github-slugger'
+import { Link2 } from 'lucide-react'
+import rehypeSlug from 'rehype-slug'
 import { type Components } from 'react-markdown'
 import { cn } from '@/lib/utils'
 
@@ -46,16 +49,15 @@ function collectNodeText(children: ReactNode): string {
 }
 
 function createHeadingIdFactory() {
-  const slugCount = new Map<string, number>()
+  const slugger = new GithubSlugger()
 
   return (text: string) => {
-    const baseId = slugifyHeading(stripMarkdownInline(text))
-    const count = slugCount.get(baseId) ?? 0
-    slugCount.set(baseId, count + 1)
-
-    return count === 0 ? baseId : `${baseId}-${count}`
+    const normalized = stripMarkdownInline(text)
+    return slugger.slug(normalized || 'section') || slugifyHeading(normalized)
   }
 }
+
+export const markdownRehypePlugins = [rehypeSlug]
 
 export function normalizeMarkdownImageSrc(src?: string) {
   if (!src) {
@@ -130,52 +132,63 @@ export function extractTableOfContents(markdown: string) {
 export function createMarkdownComponents(): Components {
   const createHeadingId = createHeadingIdFactory()
 
-  const resolveHeadingId = (children: ReactNode) =>
-    createHeadingId(stripMarkdownInline(collectNodeText(children)))
+  const resolveHeadingId = (id: string | undefined, children: ReactNode) =>
+    id || createHeadingId(stripMarkdownInline(collectNodeText(children)))
+
+  const createHeading =
+    (
+      Tag: 'h1' | 'h2' | 'h3' | 'h4',
+      className: string,
+      iconClassName: string
+    ) =>
+    ({
+      className: headingClassName,
+      children,
+      id,
+      ...props
+    }: ComponentPropsWithoutRef<'h1'>) => {
+      const headingId = resolveHeadingId(id, children)
+
+      return (
+        <Tag id={headingId} className={cn('group/heading relative', className, headingClassName)} {...props}>
+          <a
+            href={`#${headingId}`}
+            className='absolute inset-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50'
+            aria-label={`跳转到标题：${stripMarkdownInline(collectNodeText(children))}`}
+          />
+          <span className='relative z-10 inline-flex items-start gap-2'>
+            <span>{children}</span>
+            <span
+              className={cn(
+                'mt-1 inline-flex shrink-0 text-muted-foreground/70 opacity-0 transition-opacity group-hover/heading:opacity-100 group-focus-within/heading:opacity-100',
+                iconClassName
+              )}
+              aria-hidden='true'
+            >
+              <Link2 className='size-[0.9em]' />
+            </span>
+          </span>
+        </Tag>
+      )
+    }
 
   return {
-    h1: ({ className, children, ...props }) => (
-      <h1
-        id={resolveHeadingId(children)}
-        className={cn(
-          'mt-10 mb-6 scroll-m-20 text-4xl font-semibold tracking-tight first:mt-0',
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </h1>
+    h1: createHeading(
+      'h1',
+      'mt-10 mb-6 scroll-m-20 text-4xl font-semibold tracking-tight first:mt-0',
+      'text-primary'
     ),
-    h2: ({ className, children, ...props }) => (
-      <h2
-        id={resolveHeadingId(children)}
-        className={cn(
-          'mt-10 mb-4 scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0',
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </h2>
+    h2: createHeading(
+      'h2',
+      'mt-10 mb-4 scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0',
+      'text-primary'
     ),
-    h3: ({ className, children, ...props }) => (
-      <h3
-        id={resolveHeadingId(children)}
-        className={cn('mt-8 mb-3 scroll-m-20 text-xl font-semibold tracking-tight', className)}
-        {...props}
-      >
-        {children}
-      </h3>
+    h3: createHeading(
+      'h3',
+      'mt-8 mb-3 scroll-m-20 text-xl font-semibold tracking-tight',
+      'text-primary/80'
     ),
-    h4: ({ className, children, ...props }) => (
-      <h4
-        id={resolveHeadingId(children)}
-        className={cn('mt-6 mb-2 scroll-m-20 text-lg font-semibold', className)}
-        {...props}
-      >
-        {children}
-      </h4>
-    ),
+    h4: createHeading('h4', 'mt-6 mb-2 scroll-m-20 text-lg font-semibold', 'text-primary/70'),
     p: ({ className, ...props }) => (
       <p className={cn('my-4 leading-7 text-foreground/90', className)} {...props} />
     ),

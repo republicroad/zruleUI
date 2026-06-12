@@ -1,15 +1,12 @@
-import { useState } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { type _List } from '../data/schema'
 import { toast } from 'sonner'
 import { sleep } from '@/lib/utils'
-import { deleteFormList } from "@/api/serverApi"
+import { formListService } from '../service/list'
 
 
 type ListDeleteDialogProps = {
@@ -26,7 +23,9 @@ export function ListDeleteDialog({
   const queryClient = useQueryClient()
 
   async function handleDelete(){
-      const res = await deleteFormList(currentRow.list_id)
+      const res = await formListService.deleteFormList({
+        list_id: currentRow.list_id,
+      })
       toast.promise(sleep(0.01), {
         loading: 'delete form list...',
         success: () => {

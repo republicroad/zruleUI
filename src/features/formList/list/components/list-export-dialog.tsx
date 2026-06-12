@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Input } from '@/components/ui/input'
-import { exportFormList } from '@/api/serverApi'
+import { formListService } from '../service/list'
 import type { _List } from '../data/schema'
 
 const formSchema = z.object({
@@ -54,7 +54,7 @@ export function ListExportDialog({
 
   const exportMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) =>
-      exportFormList(values.list_id, values.list_name, values.file_type),
+      formListService.exportFormList(values),
     onSuccess: async (blob, values) => {
       const fileName = `${values.list_name || values.list_id}.${values.file_type}`
       const downloadUrl = window.URL.createObjectURL(blob)

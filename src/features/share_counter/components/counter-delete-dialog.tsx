@@ -1,17 +1,12 @@
-import { useState } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { showSubmittedData } from '@/lib/show-submitted-data'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { type shareCounter } from '../data/schema'
-import { deleteCounter } from '../../../api/serverApi'
+import { counterService } from '../service/counter'
 import { toast } from 'sonner'
 import { sleep } from '@/lib/utils'
-import { de } from '@faker-js/faker'
-import { v } from 'node_modules/@faker-js/faker/dist/airline-DF6RqYmq'
+
 
 type CounterDeleteDialogProps = {
   open: boolean
@@ -27,7 +22,10 @@ export function CountersDeleteDialog({
   const queryClient = useQueryClient()
 
   async function handleDelete(){
-      const res = await deleteCounter(currentRow.id, currentRow.user_id)
+     const res = await counterService.deleteCounter({
+        id: currentRow.id,
+        user_id: currentRow.user_id,
+      })
       toast.promise(sleep(0.01), {
         loading: 'delete counter...',
         success: () => {
