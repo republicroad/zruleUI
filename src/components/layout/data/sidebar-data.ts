@@ -275,7 +275,7 @@ export const sidebarData: SidebarData = {
       items: [
         {
           title: '编辑器',
-          url: '/editors',
+          url: '/editor',
           // icon: LayoutDashboard,
         },
         {
