@@ -1,0 +1,19 @@
+name: brdeui
+version: '3.8'
+services:
+  nginx:
+    name: brdeui
+    build:
+      # context docs: https://docs.docker.com/build/concepts/context/#filesystem-contexts
+      context: .  # 表示当前目录作为构建上下文
+      dockerfile: ./Containerfile  # 指定 Dockerfile 文件位置
+    # image: nginx:alpine
+    image: brdeui:latest   # 使用本地构建的镜像而不是官方镜像
+    restart: unless-stopped
+    volumes:
+      # Mount the local nginx.conf to the container's default config location
+      - ./podman/nginx.conf:/etc/nginx/nginx.conf:ro
+    # extra_hosts:
+      # - "host.containers.internal:${HOST_IP}"
+      # - "host.containers.internal:host-gateway"
+    network_mode: host
