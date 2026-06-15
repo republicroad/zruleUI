@@ -32,8 +32,6 @@ dev-build:
   only:
     changes:
       - version
-    refs:
-      - devel
   except:
     - tags
 
