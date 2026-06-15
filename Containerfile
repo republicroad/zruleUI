@@ -21,7 +21,9 @@ COPY --from=install /temp/dev/node_modules node_modules
 # COPY --from=install /temp/dev/jdm-editor/packages/jdm-editor/node_modules jdm-editor/packages/jdm-editor/node_modules
 # [optional] tests & build
 # RUN bun test
-RUN bun run build --mode dev
+# RUN bun run build --mode dev
+RUN bun run build -m devtest  # 测试环境构建
+# RUN bun run build             # 生产环境构建
 
 # Stage : Serve with Nginx
 FROM nginx:alpine AS release
