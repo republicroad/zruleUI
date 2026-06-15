@@ -5,7 +5,8 @@ WORKDIR /app
 # stage: install dependencies
 FROM base AS install
 WORKDIR /temp/dev
-COPY package.json bun.lock ./
+#COPY package.json bun.lock ./
+COPY . .
 RUN bun install --frozen-lockfile --registry http://registry.npmmirror.com
 
 # stage: build application
