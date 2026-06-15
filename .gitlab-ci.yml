@@ -59,8 +59,8 @@ dev-deploy:
   only:
     changes:
       - version
-    refs:
-      - devel
+    # refs:
+    #   - devel
   except:
     - tags
 #------------------------- 北京DEV测试环境发布end
