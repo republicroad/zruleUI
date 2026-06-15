@@ -39,32 +39,32 @@ dev-build:
 
 
 
-dev-deploy:
-  stage: deploy
-  image: registry.cn-qingdao.aliyuncs.com/geetest_cb/kubectl:v1.27.5
-  variables:
-    KUBE_CONFIG: "$KUBE_CONFIG_HSBJ_DEV"
-    ingress: "brdeui-dev.geevisit.com"
-  before_script:
-    - mkdir -p ~/.kube && cat "$KUBE_CONFIG" > ~/.kube/config
-    - echo '101.126.27.179 hsbj-dev-cn-k8s.gtapp.xyz' >> /etc/hosts
-  script:
-    - CI_COMMIT_REF_NAME=dev-$(cat version)
-    - echo $CI_COMMIT_REF_NAME
-    - if kubectl get deployments.apps ${namecb} -o yaml|grep image:|grep "${namecb}:dev" &>/dev/null;then kubectl set env deployments ${namecb} DEPLOY_DATE="$(date)" ;else kubectl set image deployment/${namecb} ${namecb}=registry.cn-hangzhou.aliyuncs.com/kae/${namecb}:dev --record;fi
-    - sed -ri 's+dl-cdn.alpinelinux.org+mirrors.aliyun.com+g' /etc/apk/repositories
-    - apk add --no-cache curl ca-certificates
-    - update-ca-certificates
-    - echo 'Y3VybCAtcyAtWCBQT1NUIC1IICdDb250ZW50LXR5cGU6IGFwcGxpY2F0aW9uL2pzb24nIC1kICd7Im1zZ190eXBlIjogInRleHQiLCJjb250ZW50IjogeyJ0ZXh0IjogIici6aG555uu54q25oCB77yaJDFcbumhueebruWQjeensO+8miR7Q0lfUFJPSkVDVF9OQU1FfVxu6aG555uu5Y+R54mI77yaJHtDSV9DT01NSVRfUkVGX05BTUV9XG7pobnnm67lnLDlnYDvvJoke0NJX0pPQl9VUkx9XG7pobnnm67mj5DkuqTvvJoke0dJVExBQl9VU0VSX05BTUV9IicifX0nIGh0dHBzOi8vb3Blbi5mZWlzaHUuY24vb3Blbi1hcGlzL2JvdC92Mi9ob29rLyQyCg=='|base64 -d|sh -s "${namecb}测试环境发布完成${ingress}" "c42aa6ed-809d-4e8b-995d-90e7077804ec"
-  after_script:
-    - rm -f ~/.kube/config
-  only:
-    changes:
-      - version
-    refs:
-      - devel
-  except:
-    - tags
+# dev-deploy:
+#   stage: deploy
+#   image: registry.cn-qingdao.aliyuncs.com/geetest_cb/kubectl:v1.27.5
+#   variables:
+#     KUBE_CONFIG: "$KUBE_CONFIG_HSBJ_DEV"
+#     ingress: "brdeui-dev.geevisit.com"
+#   before_script:
+#     - mkdir -p ~/.kube && cat "$KUBE_CONFIG" > ~/.kube/config
+#     - echo '101.126.27.179 hsbj-dev-cn-k8s.gtapp.xyz' >> /etc/hosts
+#   script:
+#     - CI_COMMIT_REF_NAME=dev-$(cat version)
+#     - echo $CI_COMMIT_REF_NAME
+#     - if kubectl get deployments.apps ${namecb} -o yaml|grep image:|grep "${namecb}:dev" &>/dev/null;then kubectl set env deployments ${namecb} DEPLOY_DATE="$(date)" ;else kubectl set image deployment/${namecb} ${namecb}=registry.cn-hangzhou.aliyuncs.com/kae/${namecb}:dev --record;fi
+#     - sed -ri 's+dl-cdn.alpinelinux.org+mirrors.aliyun.com+g' /etc/apk/repositories
+#     - apk add --no-cache curl ca-certificates
+#     - update-ca-certificates
+#     - echo 'Y3VybCAtcyAtWCBQT1NUIC1IICdDb250ZW50LXR5cGU6IGFwcGxpY2F0aW9uL2pzb24nIC1kICd7Im1zZ190eXBlIjogInRleHQiLCJjb250ZW50IjogeyJ0ZXh0IjogIici6aG555uu54q25oCB77yaJDFcbumhueebruWQjeensO+8miR7Q0lfUFJPSkVDVF9OQU1FfVxu6aG555uu5Y+R54mI77yaJHtDSV9DT01NSVRfUkVGX05BTUV9XG7pobnnm67lnLDlnYDvvJoke0NJX0pPQl9VUkx9XG7pobnnm67mj5DkuqTvvJoke0dJVExBQl9VU0VSX05BTUV9IicifX0nIGh0dHBzOi8vb3Blbi5mZWlzaHUuY24vb3Blbi1hcGlzL2JvdC92Mi9ob29rLyQyCg=='|base64 -d|sh -s "${namecb}测试环境发布完成${ingress}" "c42aa6ed-809d-4e8b-995d-90e7077804ec"
+#   after_script:
+#     - rm -f ~/.kube/config
+#   only:
+#     changes:
+#       - version
+#     refs:
+#       - devel
+#   except:
+#     - tags
 #------------------------- 北京DEV测试环境发布end
 
 
