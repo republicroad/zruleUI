@@ -13,7 +13,8 @@ RUN bun install --frozen-lockfile --registry http://registry.npmmirror.com
 FROM base AS build
 COPY --from=install /temp/dev/node_modules ./node_modules
 COPY . .
-RUN bun run build --mode dev
+# 以后构建语句最好放到 ci 的 stages 中. 这样可以共享基础容器.
+RUN bun run build -m devtest  # 测试环境构建
 #RUN bun run build --mode production   # 生产模式
 
 # stage: serve with nginx
