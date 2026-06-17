@@ -21,9 +21,9 @@ export function Users() {
   const navigate = route.useNavigate()
   const { data } = useQuery({
     // data, isLoading, isError, error
-    queryKey: ['/api/users/'],
+    queryKey: ['/api/users'],
     queryFn: async () => {
-      const response = await api.get('/api/users/')
+      const response = await api.get('/api/users')
       const res = response.data
       return res
     },

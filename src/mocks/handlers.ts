@@ -10,7 +10,7 @@ import { counters } from '../features/share_counter/data/counter'
 
 export const handlers = [
   ...authMock,
-  http.all('/api/users/', async ({ request }) => {
+  http.all('/api/users', async ({ request }) => {
     // const requestBody = await request.json();
     return HttpResponse.json({ status: 0, data: users })
   }),
