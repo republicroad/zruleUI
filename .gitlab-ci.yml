@@ -23,8 +23,8 @@ dev-build:
     - docker login ${REGISTRY_URL} -u "$DOCKER_USER" -p "$DOCKER_PASS"
   script:
     - CI_COMMIT_TAG=$(cat version)
-    - docker build --network host --build-arg BUILD_MODE=stage --cache-from ${REGISTRY_URL}/${REGISTRY_NS}/${namecb}:latest --tag ${REGISTRY_URL}/${REGISTRY_NS}/${namecb}:stage .
-    - docker push ${REGISTRY_URL}/${REGISTRY_NS}/${namecb}:stage
+    - docker build --network host --build-arg BUILD_MODE=stage --cache-from ${REGISTRY_URL}/${REGISTRY_NS}/${namecb}:latest --tag ${REGISTRY_URL}/${REGISTRY_NS}/${namecb}:dev .
+    - docker push ${REGISTRY_URL}/${REGISTRY_NS}/${namecb}:dev
   after_script:
     - docker logout ${REGISTRY_URL}
   tags:
@@ -49,7 +49,7 @@ dev-deploy:
   script:
     - CI_COMMIT_REF_NAME=dev-$(cat version)
     - echo $CI_COMMIT_REF_NAME
-    - if kubectl get deployments.apps ${namecb} -o yaml|grep image:|grep "${namecb}:stage" &>/dev/null;then kubectl set env deployments ${namecb} DEPLOY_DATE="$(date)" ;else kubectl set image deployment/${namecb} ${namecb}=registry.cn-hangzhou.aliyuncs.com/kae/${namecb}:stage --record;fi
+    - if kubectl get deployments.apps ${namecb} -o yaml|grep image:|grep "${namecb}:dev" &>/dev/null;then kubectl set env deployments ${namecb} DEPLOY_DATE="$(date)" ;else kubectl set image deployment/${namecb} ${namecb}=registry.cn-hangzhou.aliyuncs.com/kae/${namecb}:dev --record;fi
     - sed -ri 's+dl-cdn.alpinelinux.org+mirrors.aliyun.com+g' /etc/apk/repositories
     - apk add --no-cache curl ca-certificates
     - update-ca-certificates
